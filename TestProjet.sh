@@ -1,3 +1,6 @@
+
+
+
 #!/bin/bash
 
 function Menu {
@@ -25,26 +28,58 @@ done
 }
 
 function AuteurVersion {
-	lsb_release -d 
-	#cat /etc/lsb-release -d
-	echo -e "\n"
-	echo -e "Les Auteurs : \n Jmâa Oussama \n Khelifi Roukaia"
+lsb_release -d
+echo -e "\n"
+echo -e "Les Auteurs : \n Jmâa Oussama \n Khelifi Roukaia"
 }
 
 function AfficheContenuFichier {
-	if [ ! -f "$OPTARG" ]; then
-    echo "$OPTARG This file doesn't exist."
+if [ ! -f "$OPTARG" ]; then
+    echo "$OPTARG Ce fichier Nexiste Pas."
+   
 else
-echo "$OPTARG This file exist."
+echo "$OPTARG Ce fichier existe."
+lscpu >> $OPTARG
   cat $OPTARG
+ 
 fi
 }
 
-function AfficheHelp {
-./Description.sh
+function MotCle {
+echo "Entrez le fichier "
+read n  
+echo "le fichier choisi est $n"
+echo "les lignes qui contiennet le mot $OPTARG"
+grep -i  $OPTARG $n 
+
 }
 
+function AfficheHelp {
+cat /etc/Description
 
+}
+function InfoPlusPertinant {
+
+lshw >> $OPTARG
+truncate --size 200 $OPTARG
+}
+
+function MenuGraph {
+
+yad --title "Menu Graphique" --width=200 --height=200 --text="Vous Devez Choisir !" --text-align=center --button=gtk-info:1 --button=Description:2 --button=gtk-preferences:3
+op=$?
+case $op in
+1) yad --text="Les Auteurs sont : Khelifi Roukaia Et Jmaa Oussama" --button=Okay:0
+;;
+2) cat /etc/Description
+;;
+3) yad --about
+;;
+*)echo "Menu Graphique Fermé.."
+;;
+esac
+
+}
 while getopts "uwhgms:vo:f:" option
 do
 echo "Getopts a trouvé loption $option"
@@ -55,7 +90,7 @@ u)lscpu
 ;;
 h)AfficheHelp
 ;;
-g)yad
+g)MenuGraph
 ;;
 m)Menu
 ;;
@@ -63,7 +98,15 @@ v)AuteurVersion
 ;;
 o) AfficheContenuFichier
 ;;
-*) echo "Erreur"
+f)MotCle
+;;
+s)InfoPlusPertinant
+;;
+*) echo "Erreur ! "
 esac
+
 done
+if [ $# -eq 0 ]
+then echo "Vous Devez Entrer Un argument En tant que execution !"
+fi
 exit 0
