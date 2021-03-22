@@ -106,6 +106,7 @@ s)InfoPlusPertinant
 esac
 
 done
+#to verify if there is no arguement 
 if [ $# -eq 0 ]
 then echo "Vous Devez Entrer Un argument En tant que execution !"
 fi
